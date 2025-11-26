@@ -1,0 +1,13 @@
+# Security scan reports (generated files)
+compromise-scan-report.json
+
+# Node modules (if installing dependencies at root)
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db

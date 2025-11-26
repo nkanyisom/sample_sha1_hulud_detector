@@ -1,0 +1,44 @@
+<div class="cart-container">
+    <h1>Shopping Cart</h1>
+
+    <div *ngIf="cartItems.length === 0" class="empty-cart">
+        <p>Your cart is empty</p>
+        <button (click)="continueShopping()" class="continue-shopping-btn">Continue Shopping</button>
+    </div>
+
+    <div *ngIf="cartItems.length > 0" class="cart-content">
+        <div class="cart-items">
+            <div class="cart-item" *ngFor="let item of cartItems">
+                <img [src]="item.product.image" [alt]="item.product.name" class="item-image">
+                <div class="item-details">
+                    <h3>{{ item.product.name }}</h3>
+                    <p class="item-unit">{{ item.product.unit }}</p>
+                    <p class="item-price">R {{ item.product.price.toFixed(2) }}</p>
+                </div>
+                <div class="item-actions">
+                    <div class="quantity-control">
+                        <button (click)="updateQuantity(item.product.id, item.quantity - 1)" class="qty-btn">-</button>
+                        <span class="quantity">{{ item.quantity }}</span>
+                        <button (click)="updateQuantity(item.product.id, item.quantity + 1)" class="qty-btn">+</button>
+                    </div>
+                    <p class="item-total">R {{ (item.product.price * item.quantity).toFixed(2) }}</p>
+                    <button (click)="removeItem(item.product.id)" class="remove-btn">Remove</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>R {{ cartTotal.toFixed(2) }}</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total:</span>
+                <span>R {{ cartTotal.toFixed(2) }}</span>
+            </div>
+            <button (click)="proceedToCheckout()" class="checkout-btn">Proceed to Checkout</button>
+            <button (click)="continueShopping()" class="continue-btn">Continue Shopping</button>
+        </div>
+    </div>
+</div>
