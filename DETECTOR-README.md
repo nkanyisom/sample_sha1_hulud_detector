@@ -2,6 +2,79 @@
 
 **Proof of Concept (POC)** for detecting and preventing deployment of compromised npm packages from the SHA-1 HULUD supply chain incident (November 2025).
 
+## 🚀 Quick Start - How to Use This Detector in Your Project
+
+To integrate this compromised package detector into your own npm project, follow these steps:
+
+### Step 1: Copy Required Files
+
+Copy these two files to your project root:
+
+1. **`detect-compromised.js`** - The detector script
+2. **`sha1_hulud_full.csv`** - The compromised packages database (found in `angular-app/src/app/compromise/`)
+
+```bash
+# Example: Copy files to your project
+cp detect-compromised.js /path/to/your-project/
+cp angular-app/src/app/compromise/sha1_hulud_full.csv /path/to/your-project/
+```
+
+### Step 2: Update Your package.json
+
+Add security scanning hooks to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "security:scan": "node detect-compromised.js --scan .",
+    "prestart": "npm run security:scan",
+    "prebuild": "npm run security:scan",
+    "pretest": "npm run security:scan"
+  }
+}
+```
+
+**What this does:**
+- `security:scan` - Manual security scan command
+- `prestart` - Automatically scans before `npm start` (blocks if compromised packages found)
+- `prebuild` - Automatically scans before `npm run build` (blocks if compromised packages found)
+- `pretest` - Automatically scans before `npm test` (blocks if compromised packages found)
+
+### Step 3: Run the Scanner
+
+**Manual scan:**
+```bash
+node detect-compromised.js
+```
+
+**Automated scan (via npm hooks):**
+```bash
+npm start    # Triggers prestart hook → scans → starts app if safe
+npm run build # Triggers prebuild hook → scans → builds if safe
+npm test     # Triggers pretest hook → scans → tests if safe
+```
+
+### Step 4: Review Results
+
+If compromised packages are found:
+- The script exits with code `1` (blocks npm command)
+- Console shows detailed vulnerability information
+- JSON report saved to `compromise-scan-report.json`
+
+If no vulnerabilities:
+- Script exits with code `0` (continues with npm command)
+- App/build/tests proceed normally
+
+### Optional: Customize CSV Path
+
+If you store the CSV in a different location, update the default path in `detect-compromised.js` or use the `--csv` flag:
+
+```bash
+node detect-compromised.js --csv ./path/to/sha1_hulud_full.csv
+```
+
+---
+
 ## Project Purpose
 
 This is a **security demonstration project** that showcases:
